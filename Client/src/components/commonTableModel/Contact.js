@@ -1,13 +1,15 @@
 import {
-  Box, Checkbox,
-  Flex, Table,
+  Box,
+  Checkbox,
+  Flex,
+  Table,
   Tbody,
   Td,
   Text,
   Th,
   Thead,
   Tr,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import {
@@ -26,17 +28,24 @@ import Pagination from "components/pagination/Pagination";
 import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 
 export default function ContactTable(props) {
-  const { columnsData, tableData, title, type, selectedValues, setSelectedValues } = props;
+  const {
+    columnsData,
+    tableData,
+    title,
+    type,
+    selectedValues,
+    setSelectedValues,
+  } = props;
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => tableData, [tableData]);
-  const user = JSON.parse(localStorage.getItem("user"))
-  const [gopageValue, setGopageValue] = useState()
+  const [gopageValue, setGopageValue] = useState();
 
   const tableInstance = useTable(
     {
-      columns, data,
-      initialState: { pageIndex: 0 }
+      columns,
+      data,
+      initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
     useSortBy,
@@ -57,11 +66,11 @@ export default function ContactTable(props) {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = tableInstance;
 
   if (pageOptions.length < gopageValue) {
-    setGopageValue(pageOptions.length)
+    setGopageValue(pageOptions.length);
   }
 
   const textColor = useColorModeValue("gray.500", "white");
@@ -70,7 +79,10 @@ export default function ContactTable(props) {
   const handleCheckboxChange = (event, value) => {
     if (type === "multi") {
       if (event.target.checked) {
-        setSelectedValues((prevSelectedValues) => [...prevSelectedValues, value]);
+        setSelectedValues((prevSelectedValues) => [
+          ...prevSelectedValues,
+          value,
+        ]);
       } else {
         setSelectedValues((prevSelectedValues) =>
           prevSelectedValues.filter((selectedValue) => selectedValue !== value)
@@ -85,32 +97,36 @@ export default function ContactTable(props) {
     }
   };
 
-
   return (
     <Card
-      direction='column'
-      w='100%'
-      px='0px'
-      style={{ border: '1px solid gray.200' }}
-      overflowX={{ sm: "scroll", lg: "hidden" }}>
-      <Flex px='25px' justify='space-between' mb='20px' align='center'>
+      direction="column"
+      w="100%"
+      px="0px"
+      style={{ border: "1px solid gray.200" }}
+      overflowX={{ sm: "scroll", lg: "hidden" }}
+    >
+      <Flex px="25px" justify="space-between" mb="20px" align="center">
         <Text
           color={textColor}
-          fontSize='22px'
-          fontWeight='700'
-          lineHeight='100%'>
-          {title}  (<CountUpComponent key={data?.length} targetNumber={data?.length} />)
+          fontSize="22px"
+          fontWeight="700"
+          lineHeight="100%"
+        >
+          {title} (
+          <CountUpComponent key={data?.length} targetNumber={data?.length} />)
         </Text>
       </Flex>
-      <Box overflowY={'auto'} className="table-container-property" >
-        <Table  {...getTableProps()} variant='simple' color='gray.500' mb='24px'>
+      <Box overflowY={"auto"} className="table-container-property">
+        <Table {...getTableProps()} variant="simple" color="gray.500" mb="24px">
           <Thead zIndex={1}>
             {headerGroups?.map((headerGroup, index) => (
               <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                 {headerGroup.headers.map((column, index) => (
-
                   <Th
-                    {...column.getHeaderProps(column.isSortable !== false && column.getSortByToggleProps())}
+                    {...column.getHeaderProps(
+                      column.isSortable !== false &&
+                        column.getSortByToggleProps()
+                    )}
                     pe="10px"
                     key={index}
                     borderColor={borderColor}
@@ -121,13 +137,26 @@ export default function ContactTable(props) {
                       fontSize={{ sm: "14px", lg: "16px" }}
                       color=" secondaryGray.900"
                     >
-                      <span style={{ textTransform: "capitalize", marginRight: "8px" }}>
+                      <span
+                        style={{
+                          textTransform: "capitalize",
+                          marginRight: "8px",
+                        }}
+                      >
                         {column.render("Header")}
                       </span>
 
                       {column.isSortable !== false && (
                         <span>
-                          {column.isSorted ? (column.isSortedDesc ? <FaSortDown /> : <FaSortUp />) : <FaSort />}
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <FaSortDown />
+                            ) : (
+                              <FaSortUp />
+                            )
+                          ) : (
+                            <FaSort />
+                          )}
                         </span>
                       )}
                     </Flex>
@@ -136,11 +165,17 @@ export default function ContactTable(props) {
               </Tr>
             ))}
           </Thead>
-          <Tbody  {...getTableBodyProps()}>
+          <Tbody {...getTableBodyProps()}>
             {data?.length === 0 && (
               <Tr>
                 <Td colSpan={columns.length}>
-                  <Text textAlign={'center'} width="100%" color={textColor} fontSize="sm" fontWeight="700">
+                  <Text
+                    textAlign={"center"}
+                    width="100%"
+                    color={textColor}
+                    fontSize="sm"
+                    fontWeight="700"
+                  >
                     -- No Data Found --
                   </Text>
                 </Td>
@@ -155,9 +190,32 @@ export default function ContactTable(props) {
                     if (cell?.column.Header === "#") {
                       data = (
                         <Flex align="center">
-                          {type === "multi" ? <Checkbox colorScheme="brandScheme" value={selectedValues} isChecked={selectedValues.includes(cell?.value)} onChange={(event) => handleCheckboxChange(event, cell?.value)} me="10px" /> :
-                            <Checkbox colorScheme="brandScheme" value={selectedValues} isChecked={selectedValues === cell?.value} onChange={(event) => handleCheckboxChange(event, cell?.value)} me="10px" />}
-                          <Text color={textColor} fontSize="sm" fontWeight="700">
+                          {type === "multi" ? (
+                            <Checkbox
+                              colorScheme="brandScheme"
+                              value={selectedValues}
+                              isChecked={selectedValues.includes(cell?.value)}
+                              onChange={(event) =>
+                                handleCheckboxChange(event, cell?.value)
+                              }
+                              me="10px"
+                            />
+                          ) : (
+                            <Checkbox
+                              colorScheme="brandScheme"
+                              value={selectedValues}
+                              isChecked={selectedValues === cell?.value}
+                              onChange={(event) =>
+                                handleCheckboxChange(event, cell?.value)
+                              }
+                              me="10px"
+                            />
+                          )}
+                          <Text
+                            color={textColor}
+                            fontSize="sm"
+                            fontWeight="700"
+                          >
                             {cell?.row?.index + 1}
                           </Text>
                         </Flex>
@@ -187,6 +245,20 @@ export default function ContactTable(props) {
                         </Text>
                         // </Link>
                       );
+                    } else if (cell?.column.Header === "Full Name") {
+                      data = (
+                        // <Link to={`/contactView/${cell?.row?.original._id}`}>
+                        <Text
+                          me="10px"
+                          // sx={{ '&:hover': { color: 'blue.500', textDecoration: 'underline' } }}
+                          color={textColor}
+                          fontSize="sm"
+                          fontWeight="700"
+                        >
+                          {cell?.value}
+                        </Text>
+                        // </Link>
+                      );
                     } else if (cell?.column.Header === "last Name") {
                       data = (
                         <Text
@@ -198,17 +270,15 @@ export default function ContactTable(props) {
                           {cell?.value}
                         </Text>
                       );
-                    } else if (cell?.column.Header === "phone Number") {
+                    } else if (cell?.column.Header === "Phone Number") {
                       data = (
-                        <Text fontSize="sm" fontWeight="700"
-                          color={textColor}>
+                        <Text fontSize="sm" fontWeight="700" color={textColor}>
                           {cell?.value}
                         </Text>
                       );
                     } else if (cell?.column.Header === "Email Address") {
                       data = (
-                        <Text fontSize="sm" fontWeight="700"
-                          color={textColor}>
+                        <Text fontSize="sm" fontWeight="700" color={textColor}>
                           {cell?.value}
                         </Text>
                       );
@@ -237,7 +307,8 @@ export default function ContactTable(props) {
                         key={index}
                         fontSize={{ sm: "14px" }}
                         minW={{ sm: "150px", md: "200px", lg: "auto" }}
-                        borderColor='transparent'>
+                        borderColor="transparent"
+                      >
                         {data}
                       </Td>
                     );
@@ -248,8 +319,22 @@ export default function ContactTable(props) {
           </Tbody>
         </Table>
       </Box>
-      {data?.length > 5 && <Pagination gotoPage={gotoPage} gopageValue={gopageValue} setGopageValue={setGopageValue} pageCount={pageCount} canPreviousPage={canPreviousPage} previousPage={previousPage} canNextPage={canNextPage} pageOptions={pageOptions} setPageSize={setPageSize} nextPage={nextPage} pageSize={pageSize} pageIndex={pageIndex} />}
-
+      {data?.length > 5 && (
+        <Pagination
+          gotoPage={gotoPage}
+          gopageValue={gopageValue}
+          setGopageValue={setGopageValue}
+          pageCount={pageCount}
+          canPreviousPage={canPreviousPage}
+          previousPage={previousPage}
+          canNextPage={canNextPage}
+          pageOptions={pageOptions}
+          setPageSize={setPageSize}
+          nextPage={nextPage}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+        />
+      )}
     </Card>
   );
 }
